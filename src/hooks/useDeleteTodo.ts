@@ -23,7 +23,7 @@ export const useDeleteTodos = ({
 
   const handleDeleteTodos = async (id: number) => {
     try {
-      handleSetTodoIdLoading([id]);
+      handleSetTodoIdLoading(prev => [...prev, id]);
       await deleteTodos(id);
       handleSetPreparedTodos(prev => prev.filter(todo => todo.id !== id));
     } catch (err) {
@@ -35,33 +35,34 @@ export const useDeleteTodos = ({
   };
 
   const handleDeleteAllCompletedTodos = async () => {
-    const completedIds = completedTodos.map(todo => todo.id);
+    completedTodos.map(todo => handleDeleteTodos(todo.id));
+    // const completedIds = completedTodos.map(todo => todo.id);
 
-    handleSetTodoIdLoading(completedIds);
+    // handleSetTodoIdLoading(completedIds);
 
-    try {
-      const results = await Promise.allSettled(
-        completedTodos.map(todo => deleteTodos(todo.id)),
-      );
+    // try {
+    //   const results = await Promise.allSettled(
+    //     completedTodos.map(todo => deleteTodos(todo.id)),
+    //   );
 
-      const successfulIds = completedIds.filter(
-        (_, index) => results[index].status === 'fulfilled',
-      );
+    //   const successfulIds = completedIds.filter(
+    //     (_, index) => results[index].status === 'fulfilled',
+    //   );
 
-      handleSetPreparedTodos(prev =>
-        prev.filter(todo => !successfulIds.includes(todo.id)),
-      );
+    //   handleSetPreparedTodos(prev =>
+    //     prev.filter(todo => !successfulIds.includes(todo.id)),
+    //   );
 
-      const hasError = results.some(r => r.status === 'rejected');
+    //   const hasError = results.some(r => r.status === 'rejected');
 
-      if (hasError) {
-        handleSetError(ErrorMessages.Delete);
-        setTimeout(() => handleSetError(ErrorMessages.WithoutError), 3000);
-      }
-    } finally {
-      handleSetTodoIdLoading([]);
-      inputRef.current?.focus();
-    }
+    //   if (hasError) {
+    //     handleSetError(ErrorMessages.Delete);
+    //     setTimeout(() => handleSetError(ErrorMessages.WithoutError), 3000);
+    //   }
+    // } finally {
+    //   handleSetTodoIdLoading([]);
+    //   inputRef.current?.focus();
+    // }
   };
 
   return { handleDeleteTodos, handleDeleteAllCompletedTodos };

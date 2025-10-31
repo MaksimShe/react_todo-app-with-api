@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { ErrorMessages, Todo } from '../../types';
 import { useAddTodo } from '../../hooks/useAddTodo';
+import { useToggleTodo } from '../../hooks/useToggleTodo';
 
 type Props = {
   quantityActiveTasks: number;
@@ -10,8 +11,8 @@ type Props = {
   isDisabledInput: boolean;
   inputRef;
 
-  handleError: (error: ErrorMessages) => void;
-  handleIdTodoLoading: (id: number[]) => void;
+  handleSetError: (error: ErrorMessages) => void;
+  handleSetIdTodoLoading: (id: number[]) => void;
   handleSetDisableInput: (loading: boolean) => void;
   handlePreparedTodos: (todos: Todo[]) => void;
 };
@@ -22,16 +23,23 @@ export const TodoHeader: React.FC<Props> = ({
   isDisabledInput,
   inputRef,
 
-  handleError,
-  handleIdTodoLoading,
+  handleSetError,
+  handleSetIdTodoLoading,
   handleSetDisableInput,
   handlePreparedTodos,
 }) => {
   const { inputText, setInputText, handleSubmit } = useAddTodo({
-    handleError,
-    handleIdTodoLoading,
+    handleSetError,
+    handleSetIdTodoLoading,
     handleSetDisableInput,
     handlePreparedTodos,
+  });
+
+  const { toggleAllTodos } = useToggleTodo({
+    preparedTodos,
+
+    handleSetError,
+    handleSetIdTodoLoading,
   });
 
   useEffect(() => {
@@ -47,6 +55,7 @@ export const TodoHeader: React.FC<Props> = ({
             active: quantityActiveTasks === 0,
           })}
           data-cy="ToggleAllButton"
+          onClick={toggleAllTodos}
         />
       )}
 

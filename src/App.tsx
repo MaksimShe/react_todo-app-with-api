@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import * as React from 'react';
@@ -47,14 +48,6 @@ export const App: React.FC = () => {
 
   const filteredTodos = filterTodos(preparedTodos, activeFilterStatus);
 
-  const handleCheckTodo = (id: number) => {
-    setPreparedTodos(prev =>
-      prev.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-      ),
-    );
-  };
-
   const quantityActiveTasks = (): number => {
     return preparedTodos.filter(todo => !todo.completed && todo.id !== 0)
       .length;
@@ -70,8 +63,9 @@ export const App: React.FC = () => {
           preparedTodos={preparedTodos}
           isDisabledInput={isDisabledInput}
           inputRef={inputRef}
-          handleError={setCurrentError}
-          handleIdTodoLoading={setIdTodoLoading}
+
+          handleSetError={setCurrentError}
+          handleSetIdTodoLoading={setIdTodoLoading}
           handleSetDisableInput={setDisableInput}
           handlePreparedTodos={setPreparedTodos}
         />
@@ -80,7 +74,7 @@ export const App: React.FC = () => {
           filteredTodos={filteredTodos}
           todoIdLoading={idTodoLoading}
           inputRef={inputRef}
-          handleCheckTodo={handleCheckTodo}
+
           handleSetTodoIdLoading={setIdTodoLoading}
           handleSetError={setCurrentError}
           handleSetPreparedTodos={setPreparedTodos}
@@ -91,6 +85,7 @@ export const App: React.FC = () => {
             filteredTodos={preparedTodos}
             activeFilterStatus={activeFilterStatus}
             inputRef={inputRef}
+
             quantityActiveTasks={quantityActiveTasks()}
             handleChangeFilter={setActiveFilterStatus}
             handleSetPreparedTodos={setPreparedTodos}

@@ -3,31 +3,47 @@ import { ErrorMessages, Todo } from '../types';
 import { updateTodos } from '../api/todos';
 
 type Props = {
-  filteredTodos: Todo[];
+  preparedTodos: Todo[];
 
   handleSetError: (error: ErrorMessages) => void;
-  handleSetTodoIdLoading: Dispatch<SetStateAction<number[]>>;
+  handleSetIdTodoLoading: Dispatch<SetStateAction<number[]>>;
 };
 
 export const useToggleTodo = ({
-  filteredTodos,
+  preparedTodos,
 
-  handleSetTodoIdLoading,
+  handleSetIdTodoLoading,
   handleSetError,
 }: Props) => {
   const handleToggleTodos = async (id: number) => {
-    handleSetTodoIdLoading([id]);
-    const preparedForUpdate = filteredTodos.find(i => i.id === id);
+    handleSetIdTodoLoading(prev => [...prev, id]);
+    const preparedForUpdate = preparedTodos.find(i => i.id === id);
 
     try {
-      await updateTodos({ ...preparedForUpdate, completed: true }, id);
-      preparedForUpdate.completed = true;
+      await updateTodos(
+        { ...preparedForUpdate, completed: !preparedForUpdate.completed },
+        id,
+      );
+      preparedForUpdate.completed = !preparedForUpdate.completed;
     } catch (err) {
       handleSetError(ErrorMessages.Update);
     } finally {
-      handleSetTodoIdLoading([]);
+      handleSetIdTodoLoading([]);
     }
   };
 
-  return { handleToggleTodos };
+  const toggleAllTodos = async () => {
+    if (
+      preparedTodos.every(todo => todo.completed === true) ||
+      preparedTodos.every(todo => todo.completed === false)
+    ) {
+      preparedTodos.map(todo => handleToggleTodos(todo.id));
+    } else {
+      preparedTodos
+        .filter(todo => todo.completed === false)
+        .map(todo => handleToggleTodos(todo.id));
+    }
+  };
+
+  return { handleToggleTodos, toggleAllTodos };
 };

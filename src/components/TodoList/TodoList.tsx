@@ -11,7 +11,6 @@ type Props = {
   todoIdLoading: number[];
   inputRef;
 
-  handleCheckTodo: (id: number) => void;
   handleSetTodoIdLoading: (id: number[]) => void;
   handleSetError(error: ErrorMessages);
   handleSetPreparedTodos: (todos: Todo[]) => void;
@@ -22,7 +21,6 @@ export const TodoList: React.FC<Props> = ({
   todoIdLoading, //jsx
   inputRef, //use
 
-  //  handleCheckTodo, //jsx
   handleSetTodoIdLoading, //use
   handleSetError, //use
   handleSetPreparedTodos, //use
@@ -37,11 +35,13 @@ export const TodoList: React.FC<Props> = ({
   });
 
   const { handleToggleTodos } = useToggleTodo({
-    filteredTodos,
+    preparedTodos: filteredTodos,
 
-    handleSetTodoIdLoading,
+    handleSetIdTodoLoading: handleSetTodoIdLoading,
     handleSetError,
   });
+
+  const [isActiveForm, setIsActiveForm] = React.useState<number>();
 
   return (
     <section className="todoapp__main" data-cy="TodoList">
@@ -62,9 +62,25 @@ export const TodoList: React.FC<Props> = ({
               />
             </label>
 
-            <span data-cy="TodoTitle" className="todo__title">
-              {todo.title}
-            </span>
+            {isActiveForm === todo.id ? (
+              <form>
+                <input
+                  data-cy="TodoTitleField"
+                  className="todo__title-field"
+                  type="text"
+                  value={todo.title}
+                  onChange={() => {}}
+                />
+              </form>
+            ) : (
+              <span
+                data-cy="TodoTitle"
+                className="todo__title"
+                onDoubleClick={() => setIsActiveForm(todo.id)}
+              >
+                {todo.title}
+              </span>
+            )}
 
             <button
               type="button"
