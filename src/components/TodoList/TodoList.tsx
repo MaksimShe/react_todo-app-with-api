@@ -26,8 +26,10 @@ export const TodoList: React.FC<Props> = ({
   handleSetError, //use
   handleSetPreparedTodos, //use
 }) => {
-  const [isActiveForm, setIsActiveForm] = React.useState<number>();
-  const [todoText, setTodoText] = React.useState<string>();
+  const [activeForm, setActiveForm] = React.useState<number>();
+  const [todoText, setTodoText] = React.useState<string>('');
+
+  const editInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const { handleDeleteTodos } = useDeleteTodos({
     filteredTodos,
@@ -50,24 +52,27 @@ export const TodoList: React.FC<Props> = ({
 
     handleSetTodoIdLoading,
     handleSetError,
+    handleSetActiveForm: setActiveForm,
+    handleDeleteTodos,
+    editInputRef,
   });
 
   const changeInputField = (id, text) => {
-    setIsActiveForm(id);
+    setActiveForm(id);
     setTodoText(text);
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    handleUpdateTodos(isActiveForm, todoText);
-    setIsActiveForm(null);
   };
 
   const handleEsc = event => {
     if (event.key === 'Escape') {
-      setIsActiveForm(null);
+      setActiveForm(-1);
     }
-  }
+  };
+
+  React.useEffect(() => {
+    if (activeForm > 0) {
+      editInputRef.current?.focus();
+    }
+  }, [activeForm]);
 
   return (
     <section className="todoapp__main" data-cy="TodoList">
@@ -88,16 +93,19 @@ export const TodoList: React.FC<Props> = ({
               />
             </label>
 
-            {isActiveForm === todo.id ? (
-              <form onSubmit={handleSubmit}>
+            {activeForm === todo.id ? (
+              <form
+                onSubmit={event => handleUpdateTodos(todo.id, todoText, event)}
+              >
                 <input
                   data-cy="TodoTitleField"
                   className="todo__title-field"
                   type="text"
                   value={todoText}
                   onChange={e => setTodoText(e.target.value)}
-                  autoFocus
+                  ref={editInputRef}
                   onKeyDown={e => handleEsc(e)}
+                  onBlur={() => handleUpdateTodos(todo.id, todoText)}
                 />
               </form>
             ) : (

@@ -43,8 +43,8 @@ export const TodoHeader: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, [inputRef, isDisabledInput]);
+    inputRef.current?.focus();
+  }, [isDisabledInput]);
 
   return (
     <header className="todoapp__header">
