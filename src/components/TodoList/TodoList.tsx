@@ -5,6 +5,7 @@ import cn from 'classnames';
 import * as React from 'react';
 import { useDeleteTodos } from '../../hooks/useDeleteTodo';
 import { useToggleTodo } from '../../hooks/useToggleTodo';
+import { useUpdateTodo } from '../../hooks/useUpdateTodo';
 
 type Props = {
   filteredTodos: Todo[];
@@ -25,6 +26,9 @@ export const TodoList: React.FC<Props> = ({
   handleSetError, //use
   handleSetPreparedTodos, //use
 }) => {
+  const [isActiveForm, setIsActiveForm] = React.useState<number>();
+  const [todoText, setTodoText] = React.useState<string>();
+
   const { handleDeleteTodos } = useDeleteTodos({
     filteredTodos,
     inputRef,
@@ -41,7 +45,29 @@ export const TodoList: React.FC<Props> = ({
     handleSetError,
   });
 
-  const [isActiveForm, setIsActiveForm] = React.useState<number>();
+  const { handleUpdateTodos } = useUpdateTodo({
+    preparedTodos: filteredTodos,
+
+    handleSetTodoIdLoading,
+    handleSetError,
+  });
+
+  const changeInputField = (id, text) => {
+    setIsActiveForm(id);
+    setTodoText(text);
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    handleUpdateTodos(isActiveForm, todoText);
+    setIsActiveForm(null);
+  };
+
+  const handleEsc = event => {
+    if (event.key === 'Escape') {
+      setIsActiveForm(null);
+    }
+  }
 
   return (
     <section className="todoapp__main" data-cy="TodoList">
@@ -63,34 +89,36 @@ export const TodoList: React.FC<Props> = ({
             </label>
 
             {isActiveForm === todo.id ? (
-              <form>
+              <form onSubmit={handleSubmit}>
                 <input
                   data-cy="TodoTitleField"
                   className="todo__title-field"
                   type="text"
-                  value={todo.title}
-                  onChange={() => {}}
+                  value={todoText}
+                  onChange={e => setTodoText(e.target.value)}
+                  autoFocus
+                  onKeyDown={e => handleEsc(e)}
                 />
               </form>
             ) : (
-              <span
-                data-cy="TodoTitle"
-                className="todo__title"
-                onDoubleClick={() => setIsActiveForm(todo.id)}
-              >
-                {todo.title}
-              </span>
+              <>
+                <span
+                  data-cy="TodoTitle"
+                  className="todo__title"
+                  onDoubleClick={() => changeInputField(todo.id, todo.title)}
+                >
+                  {todo.title}
+                </span>
+                <button
+                  type="button"
+                  className="todo__remove"
+                  data-cy="TodoDelete"
+                  onClick={() => handleDeleteTodos(todo.id)}
+                >
+                  ×
+                </button>
+              </>
             )}
-
-            <button
-              type="button"
-              className="todo__remove"
-              data-cy="TodoDelete"
-              onClick={() => handleDeleteTodos(todo.id)}
-            >
-              ×
-            </button>
-
             <div
               data-cy="TodoLoader"
               className={cn('modal overlay', {
