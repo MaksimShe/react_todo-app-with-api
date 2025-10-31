@@ -1,4 +1,4 @@
-import { Dispatch, RefObject, SetStateAction } from 'react';
+import { Dispatch, FormEvent, RefObject, SetStateAction } from 'react';
 import { updateTodos } from '../api/todos';
 import { ErrorMessages, Todo } from '../types';
 
@@ -8,7 +8,7 @@ type Props = {
   handleSetTodoIdLoading: (id: number[]) => void;
   handleSetError: (error: ErrorMessages) => void;
   handleSetActiveForm: Dispatch<SetStateAction<number>>;
-  editInputRef?: RefObject<HTMLInputElement | null>;
+  editInputRef?: RefObject<HTMLInputElement | null> | undefined;
   handleDeleteTodos: (id: number) => void;
 };
 
@@ -21,7 +21,11 @@ export const useUpdateTodo = ({
   handleDeleteTodos,
   editInputRef,
 }: Props) => {
-  const handleUpdateTodos = async (id: number, text: string, event = null) => {
+  const handleUpdateTodos = async (
+    id: number,
+    text: string,
+    event?: FormEvent<HTMLFormElement>,
+  ) => {
     if (event) {
       event.preventDefault();
     }
@@ -32,7 +36,12 @@ export const useUpdateTodo = ({
       return;
     }
 
-    const origilalTitle: string = preparedTodos.find(i => i.id === id).title;
+    const origilalTitle: string | null =
+      preparedTodos.find(i => i.id === id)?.title || null;
+
+    if (origilalTitle === null) {
+      return;
+    }
 
     if (origilalTitle === text) {
       handleSetActiveForm(-1);
@@ -40,7 +49,13 @@ export const useUpdateTodo = ({
       return;
     }
 
-    const preparedForUpdate: Todo = preparedTodos.find(i => i.id === id);
+    const preparedForUpdate: Todo | undefined = preparedTodos.find(
+      i => i.id === id,
+    );
+
+    if (!preparedForUpdate || !origilalTitle) {
+      return;
+    }
 
     preparedForUpdate.title = text.trim();
     handleSetTodoIdLoading([id]);
@@ -49,8 +64,9 @@ export const useUpdateTodo = ({
       handleSetActiveForm(-1);
     } catch (err) {
       handleSetError(ErrorMessages.Update);
-      editInputRef.current?.focus();
-      // preparedForUpdate.title = origilalTitle;
+      if (editInputRef) {
+        editInputRef.current?.focus();
+      }
     } finally {
       handleSetTodoIdLoading([]);
     }

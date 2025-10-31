@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { Dispatch, useEffect } from 'react';
 import { ErrorMessages, Todo } from '../../types';
 import { useAddTodo } from '../../hooks/useAddTodo';
 import { useToggleTodo } from '../../hooks/useToggleTodo';
@@ -9,12 +9,12 @@ type Props = {
   quantityActiveTasks: number;
   preparedTodos: Todo[];
   isDisabledInput: boolean;
-  inputRef;
+  inputRef: React.RefObject<HTMLInputElement>;
 
   handleSetError: (error: ErrorMessages) => void;
-  handleSetIdTodoLoading: (id: number[]) => void;
+  handleSetIdTodoLoading: Dispatch<React.SetStateAction<number[]>>;
   handleSetDisableInput: (loading: boolean) => void;
-  handlePreparedTodos: (todos: Todo[]) => void;
+  handlePreparedTodos: Dispatch<React.SetStateAction<Todo[]>>;
 };
 
 export const TodoHeader: React.FC<Props> = ({

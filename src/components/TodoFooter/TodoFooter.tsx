@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction } from 'react';
 type Props = {
   filteredTodos: Todo[];
   quantityActiveTasks: number;
-  inputRef;
+  inputRef: React.RefObject<HTMLInputElement>;
   activeFilterStatus: string;
 
   handleChangeFilter: (type: FilterStatus) => void;

@@ -6,15 +6,16 @@ import * as React from 'react';
 import { useDeleteTodos } from '../../hooks/useDeleteTodo';
 import { useToggleTodo } from '../../hooks/useToggleTodo';
 import { useUpdateTodo } from '../../hooks/useUpdateTodo';
+import { SetStateAction, Dispatch } from 'react';
 
 type Props = {
   filteredTodos: Todo[];
   todoIdLoading: number[];
-  inputRef;
+  inputRef: React.RefObject<HTMLInputElement>;
 
-  handleSetTodoIdLoading: (id: number[]) => void;
-  handleSetError(error: ErrorMessages);
-  handleSetPreparedTodos: (todos: Todo[]) => void;
+  handleSetTodoIdLoading: Dispatch<SetStateAction<number[]>>;
+  handleSetError: (error: ErrorMessages) => void;
+  handleSetPreparedTodos: Dispatch<SetStateAction<Todo[]>>;
 };
 
 export const TodoList: React.FC<Props> = ({
@@ -26,7 +27,7 @@ export const TodoList: React.FC<Props> = ({
   handleSetError, //use
   handleSetPreparedTodos, //use
 }) => {
-  const [activeForm, setActiveForm] = React.useState<number>();
+  const [activeForm, setActiveForm] = React.useState<number>(-1);
   const [todoText, setTodoText] = React.useState<string>('');
 
   const editInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -57,12 +58,12 @@ export const TodoList: React.FC<Props> = ({
     editInputRef,
   });
 
-  const changeInputField = (id, text) => {
+  const changeInputField = (id: number, text: string) => {
     setActiveForm(id);
     setTodoText(text);
   };
 
-  const handleEsc = event => {
+  const handleEsc = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Escape') {
       setActiveForm(-1);
     }

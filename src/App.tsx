@@ -14,7 +14,7 @@ import { filterTodos } from './utils/fiterTodos';
 import { ErrorNotification } from './components/ErrorNotification';
 
 export const App: React.FC = () => {
-  const [isDisabledInput, setDisableInput] = useState<boolean>(null);
+  const [isDisabledInput, setDisableInput] = useState<boolean>(false);
   const [idTodoLoading, setIdTodoLoading] = useState<number[]>([]);
   const [preparedTodos, setPreparedTodos] = useState<Todo[]>([]);
   const [activeFilterStatus, setActiveFilterStatus] = useState<FilterStatus>(

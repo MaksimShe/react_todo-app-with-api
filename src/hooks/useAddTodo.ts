@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { RefObject, useState, Dispatch, FormEvent } from 'react';
 import { addTodos } from '../api/todos';
 import { ErrorMessages, Todo, USER_ID } from '../types';
 
 type Props = {
   handleSetError: (error: ErrorMessages) => void;
-  handleSetIdTodoLoading: (id: number[]) => void;
+  handleSetIdTodoLoading: Dispatch<React.SetStateAction<number[]>>;
   handleSetDisableInput: (loading: boolean) => void;
-  handlePreparedTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  handlePreparedTodos: Dispatch<React.SetStateAction<Todo[]>>;
 };
 
 export const useAddTodo = ({
@@ -17,7 +17,10 @@ export const useAddTodo = ({
 }: Props) => {
   const [inputText, setInputText] = useState('');
 
-  const handleSubmit = async (event, inputRef) => {
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>,
+    inputRef: RefObject<HTMLInputElement>,
+  ) => {
     event.preventDefault();
 
     if (!inputText.trim()) {

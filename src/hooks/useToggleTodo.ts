@@ -19,6 +19,10 @@ export const useToggleTodo = ({
     handleSetIdTodoLoading(prev => [...prev, id]);
     const preparedForUpdate = preparedTodos.find(i => i.id === id);
 
+    if (!preparedForUpdate) {
+      return;
+    }
+
     try {
       await updateTodos(
         { ...preparedForUpdate, completed: !preparedForUpdate.completed },
