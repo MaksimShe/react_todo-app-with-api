@@ -11,9 +11,17 @@ export const ErrorNotification: React.FC<Props> = ({
   currentError,
   handleError,
 }) => {
-  setTimeout(() => {
-    handleError(ErrorMessages.WithoutError);
-  }, 3000);
+  React.useEffect(() => {
+    if (!currentError) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      handleError(ErrorMessages.WithoutError);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [currentError, handleError]);
 
   return (
     <div
