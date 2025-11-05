@@ -6,30 +6,30 @@ type Props = {
   filteredTodos: Todo[];
   inputRef: RefObject<HTMLInputElement>;
 
-  handleSetPreparedTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-  handleSetError: (error: ErrorMessages) => void;
-  handleSetTodoIdLoading: Dispatch<SetStateAction<number[]>>;
+  onSetPreparedTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  onSetError: (error: ErrorMessages) => void;
+  onSetTodoIdLoading: Dispatch<SetStateAction<number[]>>;
 };
 
 export const useDeleteTodos = ({
   filteredTodos,
   inputRef,
 
-  handleSetPreparedTodos,
-  handleSetError,
-  handleSetTodoIdLoading,
+  onSetPreparedTodos,
+  onSetError,
+  onSetTodoIdLoading,
 }: Props) => {
   const completedTodos = filteredTodos.filter(todo => todo.completed);
 
   const handleDeleteTodos = async (id: number) => {
     try {
-      handleSetTodoIdLoading(prev => [...prev, id]);
+      onSetTodoIdLoading(prev => [...prev, id]);
       await deleteTodos(id);
-      handleSetPreparedTodos(prev => prev.filter(todo => todo.id !== id));
+      onSetPreparedTodos(prev => prev.filter(todo => todo.id !== id));
     } catch (err) {
-      handleSetError(ErrorMessages.Delete);
+      onSetError(ErrorMessages.Delete);
     } finally {
-      handleSetTodoIdLoading([]);
+      onSetTodoIdLoading([]);
       inputRef.current?.focus();
     }
   };

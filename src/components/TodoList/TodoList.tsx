@@ -13,19 +13,19 @@ type Props = {
   todoIdLoading: number[];
   inputRef: React.RefObject<HTMLInputElement>;
 
-  handleSetTodoIdLoading: Dispatch<SetStateAction<number[]>>;
-  handleSetError: (error: ErrorMessages) => void;
-  handleSetPreparedTodos: Dispatch<SetStateAction<Todo[]>>;
+  onSetTodoIdLoading: Dispatch<SetStateAction<number[]>>;
+  onSetError: (error: ErrorMessages) => void;
+  onSetPreparedTodos: Dispatch<SetStateAction<Todo[]>>;
 };
 
 export const TodoList: React.FC<Props> = ({
-  filteredTodos, //use
-  todoIdLoading, //jsx
-  inputRef, //use
+  filteredTodos,
+  todoIdLoading,
+  inputRef,
 
-  handleSetTodoIdLoading, //use
-  handleSetError, //use
-  handleSetPreparedTodos, //use
+  onSetTodoIdLoading,
+  onSetError,
+  onSetPreparedTodos,
 }) => {
   const [activeForm, setActiveForm] = React.useState<number>(-1);
   const [todoText, setTodoText] = React.useState<string>('');
@@ -36,24 +36,24 @@ export const TodoList: React.FC<Props> = ({
     filteredTodos,
     inputRef,
 
-    handleSetPreparedTodos,
-    handleSetError,
-    handleSetTodoIdLoading,
+    onSetPreparedTodos,
+    onSetError,
+    onSetTodoIdLoading,
   });
 
   const { handleToggleTodos } = useToggleTodo({
     preparedTodos: filteredTodos,
 
-    handleSetIdTodoLoading: handleSetTodoIdLoading,
-    handleSetError,
+    onSetTodoIdLoading,
+    onSetError,
   });
 
   const { handleUpdateTodos } = useUpdateTodo({
     preparedTodos: filteredTodos,
 
-    handleSetTodoIdLoading,
-    handleSetError,
-    handleSetActiveForm: setActiveForm,
+    onSetTodoIdLoading,
+    onSetError,
+    onSetActiveForm: setActiveForm,
     handleDeleteTodos,
     editInputRef,
   });

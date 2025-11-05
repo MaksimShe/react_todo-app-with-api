@@ -5,18 +5,18 @@ import { updateTodos } from '../api/todos';
 type Props = {
   preparedTodos: Todo[];
 
-  handleSetError: (error: ErrorMessages) => void;
-  handleSetIdTodoLoading: Dispatch<SetStateAction<number[]>>;
+  onSetError: (error: ErrorMessages) => void;
+  onSetTodoIdLoading: Dispatch<SetStateAction<number[]>>;
 };
 
 export const useToggleTodo = ({
   preparedTodos,
 
-  handleSetIdTodoLoading,
-  handleSetError,
+  onSetTodoIdLoading,
+  onSetError,
 }: Props) => {
   const handleToggleTodos = async (id: number) => {
-    handleSetIdTodoLoading(prev => [...prev, id]);
+    onSetTodoIdLoading(prev => [...prev, id]);
     const preparedForUpdate = preparedTodos.find(i => i.id === id);
 
     if (!preparedForUpdate) {
@@ -30,9 +30,9 @@ export const useToggleTodo = ({
       );
       preparedForUpdate.completed = !preparedForUpdate.completed;
     } catch (err) {
-      handleSetError(ErrorMessages.Update);
+      onSetError(ErrorMessages.Update);
     } finally {
-      handleSetIdTodoLoading([]);
+      onSetTodoIdLoading([]);
     }
   };
 

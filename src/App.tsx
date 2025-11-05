@@ -48,10 +48,8 @@ export const App: React.FC = () => {
 
   const filteredTodos = filterTodos(preparedTodos, activeFilterStatus);
 
-  const quantityActiveTasks = (): number => {
-    return preparedTodos.filter(todo => !todo.completed && todo.id !== 0)
-      .length;
-  };
+  const quantityActiveTasks =
+    preparedTodos.filter(todo => !todo.completed && todo.id !== 0).length;
 
   return (
     <div className="todoapp">
@@ -59,15 +57,15 @@ export const App: React.FC = () => {
 
       <div className="todoapp__content">
         <TodoHeader
-          quantityActiveTasks={quantityActiveTasks()}
+          quantityActiveTasks={quantityActiveTasks}
           preparedTodos={preparedTodos}
           isDisabledInput={isDisabledInput}
           inputRef={inputRef}
 
-          handleSetError={setCurrentError}
-          handleSetIdTodoLoading={setIdTodoLoading}
-          handleSetDisableInput={setDisableInput}
-          handlePreparedTodos={setPreparedTodos}
+          onSetError={setCurrentError}
+          onSetTodoIdLoading={setIdTodoLoading}
+          onSetDisableInput={setDisableInput}
+          onSetPreparedTodos={setPreparedTodos}
         />
 
         <TodoList
@@ -75,9 +73,9 @@ export const App: React.FC = () => {
           todoIdLoading={idTodoLoading}
           inputRef={inputRef}
 
-          handleSetTodoIdLoading={setIdTodoLoading}
-          handleSetError={setCurrentError}
-          handleSetPreparedTodos={setPreparedTodos}
+          onSetTodoIdLoading={setIdTodoLoading}
+          onSetError={setCurrentError}
+          onSetPreparedTodos={setPreparedTodos}
         />
 
         {preparedTodos.length > 0 && (
@@ -86,18 +84,18 @@ export const App: React.FC = () => {
             activeFilterStatus={activeFilterStatus}
             inputRef={inputRef}
 
-            quantityActiveTasks={quantityActiveTasks()}
-            handleChangeFilter={setActiveFilterStatus}
-            handleSetPreparedTodos={setPreparedTodos}
-            handleSetError={setCurrentError}
-            handleSetTodoIdLoading={setIdTodoLoading}
+            quantityActiveTasks={quantityActiveTasks}
+            onChangeFilter={setActiveFilterStatus}
+            onSetPreparedTodos={setPreparedTodos}
+            onSetError={setCurrentError}
+            onSetTodoIdLoading={setIdTodoLoading}
           />
         )}
       </div>
 
       <ErrorNotification
         currentError={currentError}
-        handleError={setCurrentError}
+        onSetError={setCurrentError}
       />
     </div>
   );

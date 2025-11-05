@@ -11,10 +11,10 @@ type Props = {
   isDisabledInput: boolean;
   inputRef: React.RefObject<HTMLInputElement>;
 
-  handleSetError: (error: ErrorMessages) => void;
-  handleSetIdTodoLoading: Dispatch<React.SetStateAction<number[]>>;
-  handleSetDisableInput: (loading: boolean) => void;
-  handlePreparedTodos: Dispatch<React.SetStateAction<Todo[]>>;
+  onSetError: (error: ErrorMessages) => void;
+  onSetTodoIdLoading: Dispatch<React.SetStateAction<number[]>>;
+  onSetDisableInput: (loading: boolean) => void;
+  onSetPreparedTodos: Dispatch<React.SetStateAction<Todo[]>>;
 };
 
 export const TodoHeader: React.FC<Props> = ({
@@ -23,28 +23,28 @@ export const TodoHeader: React.FC<Props> = ({
   isDisabledInput,
   inputRef,
 
-  handleSetError,
-  handleSetIdTodoLoading,
-  handleSetDisableInput,
-  handlePreparedTodos,
+  onSetError,
+  onSetTodoIdLoading,
+  onSetDisableInput,
+  onSetPreparedTodos,
 }) => {
   const { inputText, setInputText, handleSubmit } = useAddTodo({
-    handleSetError,
-    handleSetIdTodoLoading,
-    handleSetDisableInput,
-    handlePreparedTodos,
+    onSetError,
+    onSetTodoIdLoading,
+    onSetDisableInput,
+    onSetPreparedTodos,
   });
 
   const { toggleAllTodos } = useToggleTodo({
     preparedTodos,
 
-    handleSetError,
-    handleSetIdTodoLoading,
+    onSetError,
+    onSetTodoIdLoading,
   });
 
   useEffect(() => {
     inputRef.current?.focus();
-  }, [isDisabledInput]);
+  }, [preparedTodos]);
 
   return (
     <header className="todoapp__header">

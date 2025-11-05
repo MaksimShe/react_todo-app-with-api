@@ -5,9 +5,9 @@ import { ErrorMessages, Todo } from '../types';
 type Props = {
   preparedTodos: Todo[];
 
-  handleSetTodoIdLoading: (id: number[]) => void;
-  handleSetError: (error: ErrorMessages) => void;
-  handleSetActiveForm: Dispatch<SetStateAction<number>>;
+  onSetTodoIdLoading: (id: number[]) => void;
+  onSetError: (error: ErrorMessages) => void;
+  onSetActiveForm: Dispatch<SetStateAction<number>>;
   editInputRef?: RefObject<HTMLInputElement | null> | undefined;
   handleDeleteTodos: (id: number) => void;
 };
@@ -15,9 +15,9 @@ type Props = {
 export const useUpdateTodo = ({
   preparedTodos,
 
-  handleSetTodoIdLoading,
-  handleSetError,
-  handleSetActiveForm,
+  onSetTodoIdLoading,
+  onSetError,
+  onSetActiveForm,
   handleDeleteTodos,
   editInputRef,
 }: Props) => {
@@ -44,7 +44,7 @@ export const useUpdateTodo = ({
     }
 
     if (origilalTitle === text) {
-      handleSetActiveForm(-1);
+      onSetActiveForm(-1);
 
       return;
     }
@@ -58,17 +58,17 @@ export const useUpdateTodo = ({
     }
 
     preparedForUpdate.title = text.trim();
-    handleSetTodoIdLoading([id]);
+    onSetTodoIdLoading([id]);
     try {
       await updateTodos({ ...preparedForUpdate }, id);
-      handleSetActiveForm(-1);
+      onSetActiveForm(-1);
     } catch (err) {
-      handleSetError(ErrorMessages.Update);
+      onSetError(ErrorMessages.Update);
       if (editInputRef) {
         editInputRef.current?.focus();
       }
     } finally {
-      handleSetTodoIdLoading([]);
+      onSetTodoIdLoading([]);
     }
   };
 
